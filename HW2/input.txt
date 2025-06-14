@@ -1,0 +1,36 @@
+const max = 100, min = 1;
+var counter, sum, avg, temp;
+
+procedure computeAverage;
+  var total, count;
+  begin
+    total := 0;
+    count := 10;
+    while count > 0 do
+      begin
+        read temp;
+        total := total + temp;
+        count := count - 1
+      end;
+    avg := total / 10
+  end;
+
+procedure displayResult;
+  begin
+    write avg
+  end;
+
+begin
+  counter := 0;
+  sum := 0;
+  call computeAverage;
+  call displayResult;
+  if avg > max then
+    avg := max
+  else
+    if avg < min then
+      avg := min
+    fi
+  fi;
+  write avg
+end.
