@@ -21,18 +21,18 @@ Instructions on input formatting:
 Error Handling:
 In the event that there was a mistake following the instructions above the program will prevent an output from being created and instead write out an error message that details the cause of the error. Note that the location of the error will not be detailed. 
 Here is a list of errors that can occur:
-• program must end with period
-• const, var, and read keywords must be followed by identifier
-• symbol name has already been declared
-• constants must be assigned with =
-• constants must be assigned an integer value
-• constant and variable declarations must be followed by a semicolon
-• undeclared identifier
-• only variable values may be altered
-• assignment statements must use :=
-• begin must be followed by end
-• if must be followed by then
-• while must be followed by do
-• condition must contain comparison operator
-• right parenthesis must follow left parenthesis
-• arithmetic equations must contain operands, parentheses, numbers, or symbols
+* Program must end with period
+* Const, var, and read keywords must be followed by identifier
+* Symbol name has already been declared
+* Constants must be assigned with =
+* Constants must be assigned an integer value
+* Constant and variable declarations must be followed by a semicolon
+* Undeclared identifier
+* Only variable values may be altered
+* Assignment statements must use :=
+* Begin must be followed by end
+* If must be followed by then
+* While must be followed by do
+* Condition must contain comparison operator
+* Right parenthesis must follow left parenthesis
+* Arithmetic equations must contain operands, parentheses, numbers, or symbols
