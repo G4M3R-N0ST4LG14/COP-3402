@@ -1,8 +1,8 @@
 // George Morillo & Arturo Lara
 // COP 3402: Systems Software
 // Homework 3: Tiny PL/0 Compiler
-// George Morillo's contributions:
-// Arturo Lara's contributions:
+// George Morillo's contributions: Developing the main parser functions, variable declarations and formatting the terminal output
+// Arturo Lara's contributions: Developing the code generator process, constant delcarations and benchmarking input and output files along vm.c
 
 // Libraries
 #include <stdio.h>
@@ -17,6 +17,8 @@
 #define MAX_ERROR_MSG 50
 #define MAX_SYMBOL_TABLE_SIZE 500
 #define MAX_CODE_LENGTH 500
+
+// Majority of everything in this first section is the same as previous project lex.c
 
 // Struct for assigning numerical values to each token
 typedef enum {
@@ -227,6 +229,8 @@ void scan(const char* filename) {
     fclose(file);
 }
 
+// Start of of parser and code generator
+
 // Function to get the next token from the token stream
 void getNextToken() {
     if (token_index < token_count)
@@ -289,8 +293,51 @@ int varDeclaration() {
     return numVars;
 }
 
-// Function prototypes
-void factor(), term(), expression(), statement(), block(), program();
+// Function to handle constant declarations
+void constDeclaration() {
+    if (current_token.type == constsym) {
+        do {
+            getNextToken();
+
+            if (current_token.type != identsym)
+                error("Const must be followed by identifier");
+
+            if (findSymbol(current_token.lexeme) != -1)
+                error("Symbol name has already been declared");
+
+            // Save identifier name
+            char name[MAX_IDENT_LEN + 1];
+            strncpy(name, current_token.lexeme, MAX_IDENT_LEN);
+
+            getNextToken();
+            if (current_token.type != eqlsym)
+                error("Constants must be assigned with =");
+
+            getNextToken();
+            if (current_token.type != numbersym)
+                error("Constants must be assigned an integer value");
+
+            // Add const to symbol table
+            symbol_table[symbol_count].kind = 1;
+            strncpy(symbol_table[symbol_count].name, name, MAX_IDENT_LEN);
+            symbol_table[symbol_count].val = atoi(current_token.lexeme);
+            symbol_table[symbol_count].level = 0;
+            symbol_table[symbol_count].addr = 0; // not used
+            symbol_table[symbol_count].mark = 1;
+            symbol_count++;
+
+            getNextToken();
+        } while (current_token.type == commasym);
+
+        if (current_token.type != semicolonsym)
+            error("Constant and variable declarations must be followed by a semicolon");
+
+        getNextToken();
+    }
+}
+
+// Function expression prototype
+void expression();
 
 // Function to parse a factor
 void factor() {
@@ -378,6 +425,7 @@ void statement() {
 
 // Function to parse a block
 void block() {
+    constDeclaration();
     int numVars = varDeclaration();
     emit(6, 0, 3 + numVars); // INC
     statement();
@@ -419,12 +467,26 @@ int main(int argc, char* argv[]) {
 
     emit(9, 0, 3); // SYS HALT
 
+    // Create output file
+    // In order to process this file use vm.c
+    FILE *outfile = fopen("assemblyOutput.txt", "w");
+    if (!outfile) {
+        printf("Error: Could not open output file.\n");
+        exit(1);
+    }
+
     // Printing format
     printf("\nAssembly Code:\n");
     printf("Line\tOP\tL\tM\n");
     for (int i = 0; i < code_index; i++) {
+        // Prints the assembly code formated as such:
+        // Line OP L M
+        // Where OP is the operation code, L is the level, and M is the modifier
         printf("%-5d\t%-4s\t%-2d\t%-3d\n", i, op_names[code[i].op], code[i].l, code[i].m);
+        // Prints to the output file the assembly code in digit format
+        fprintf(outfile, "%d %d %d\n", code[i].op, code[i].l, code[i].m);
     }
+    fclose(outfile);
 
     // Printing Symbol table
     printf("\nSymbol Table:\n");
@@ -432,22 +494,8 @@ int main(int argc, char* argv[]) {
     printf("---------------------------------------------------\n");
     for (int i = 0; i < symbol_count; i++) {
         symbol s = symbol_table[i];
-        printf("%-4d | %-10s | %-5d | %-5d | %-7d | %-4d\n",
-               s.kind, s.name, s.val, s.level, s.addr, s.mark);
+        printf("%-4d | %-10s | %-5d | %-5d | %-7d | %-4d\n", s.kind, s.name, s.val, s.level, s.addr, s.mark);
     }
-
-    // Output to file for VM
-    FILE *outfile = fopen("output.txt", "w");
-    if (!outfile) {
-        printf("Error: could not open output file.\n");
-        exit(1);
-    }
-
-    for (int i = 0; i < code_index; i++) {
-        fprintf(outfile, "%d %d %d\n", code[i].op, code[i].l, code[i].m);
-    }
-    fclose(outfile);
-
 
     return 0;
 }

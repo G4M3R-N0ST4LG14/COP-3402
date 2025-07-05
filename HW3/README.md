@@ -14,7 +14,25 @@ Instructions on how to run:
 Instructions on input formatting:
 1. You can use individual letters and digits
 2. You can combine digits and letters to form names and numbers
-3. Special symbols include /, +, =, -, *, ;, :, >, <, ), (, 
+3. Special symbols include /, +, =, -, *, ;, :, >, <, ), (
 4. Reserved words: "const", "var", "procedure", "call", "begin", "end", "if", "fi", "then", "else", "while", "do", "read", "write"
 5. Reserved tokens: constsym, varsym, procsym, callsym, beginsym, endsym, ifsym, fisym, thensym, elsesym, whilesym, dosym, readsym, writesym
-6. Errors to catch: Name too long, Number too long, and Invalid symbol
+
+Error Handling:
+In the event that there was a mistake following the instructions above the program will prevent an output from being created and instead write out an error message that details the cause of the error. Note that the location of the error will not be detailed. 
+Here is a list of errors that can occur:
+• program must end with period
+• const, var, and read keywords must be followed by identifier
+• symbol name has already been declared
+• constants must be assigned with =
+• constants must be assigned an integer value
+• constant and variable declarations must be followed by a semicolon
+• undeclared identifier
+• only variable values may be altered
+• assignment statements must use :=
+• begin must be followed by end
+• if must be followed by then
+• while must be followed by do
+• condition must contain comparison operator
+• right parenthesis must follow left parenthesis
+• arithmetic equations must contain operands, parentheses, numbers, or symbols
