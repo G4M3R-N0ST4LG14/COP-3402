@@ -1,0 +1,6 @@
+var x;
+
+begin
+  y := x + 1;
+  write y
+end.
