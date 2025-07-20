@@ -1,0 +1,19 @@
+const a = 10;
+var x, y;
+
+procedure checkMod;
+var r;
+begin
+  r := x mod a;
+  if r = 0 then
+    y := 1
+  else
+    y := 0
+  fi
+end;
+
+begin
+  x := 20;
+  call checkMod;
+  write y
+end.
